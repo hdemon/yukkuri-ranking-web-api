@@ -5,3 +5,9 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+Mylist.create({
+  title: "mylist example",
+  mylist_id: 123,
+  description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore veniam suscipit explicabo eius quis, perspiciatis laborum, quo amet tempora magnam earum nihil iusto fugit porro dolorem sed dignissimos soluta voluptatem."
+})
