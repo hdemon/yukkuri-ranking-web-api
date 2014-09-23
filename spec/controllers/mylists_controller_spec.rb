@@ -1,38 +1,39 @@
 require 'rails_helper'
 
 describe MylistsController do
-
-  # This should return the minimal set of attributes required to create a valid
-  # Mylist. As you add validations to Mylist, be sure to
-  # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      title: "地球防衛軍2（ゆっくり実況）",
+      mylist_id: 44787551,
+      description: "",
+      # 後で以下の要素をモデルに付け加える
+      # published_at: "Wed, 25 Jun 2014 02:33:33 +0900"
+      # build_latest_at: "Wed, 25 Jun 2014 02:33:33 +0900"
+      # creator: "☆大神☆（大神過激団:編集長）"
+    }
   }
 
   let(:invalid_attributes) {
     skip("Add a hash of attributes invalid for your model")
   }
 
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # MylistsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  describe "GET index" do
-    it "assigns all mylists as @mylists" do
-      mylist = Mylist.create! valid_attributes
-      get :index, {}, valid_session
-      expect(assigns(:mylists)).to eq([mylist])
-    end
-  end
+  # describe "GET index" do
+  #   it "assigns all mylists as @mylists" do
+  #     mylist = Mylist.create! valid_attributes
+  #     get :index, {}, valid_session
+  #     expect(assigns(:mylists)).to eq([mylist])
+  #   end
+  # end
 
-  describe "GET show" do
-    it "assigns the requested mylist as @mylist" do
-      mylist = Mylist.create! valid_attributes
-      get :show, {:id => mylist.to_param}, valid_session
-      expect(assigns(:mylist)).to eq(mylist)
-    end
-  end
+  # describe "GET show" do
+  #   it "assigns the requested mylist as @mylist" do
+  #     mylist = Mylist.create! valid_attributes
+  #     get :show, {:id => mylist.to_param}, valid_session
+  #     expect(assigns(:mylist)).to eq(mylist)
+  #   end
+  # end
 
   describe "POST create" do
     describe "with valid params" do
@@ -50,7 +51,8 @@ describe MylistsController do
 
       it "redirects to the created mylist" do
         post :create, {:mylist => valid_attributes}, valid_session
-        expect(response).to redirect_to(Mylist.last)
+        expect(response.body).to include valid_attributes[:title]
+        expect(response.body).to include valid_attributes[:mylist_id].to_s
       end
     end
 
