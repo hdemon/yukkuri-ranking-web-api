@@ -52,21 +52,6 @@ RSpec.describe MylistsController, :type => :controller do
     end
   end
 
-  describe "GET new" do
-    it "assigns a new mylist as @mylist" do
-      get :new, {}, valid_session
-      expect(assigns(:mylist)).to be_a_new(Mylist)
-    end
-  end
-
-  describe "GET edit" do
-    it "assigns the requested mylist as @mylist" do
-      mylist = Mylist.create! valid_attributes
-      get :edit, {:id => mylist.to_param}, valid_session
-      expect(assigns(:mylist)).to eq(mylist)
-    end
-  end
-
   describe "POST create" do
     describe "with valid params" do
       it "creates a new Mylist" do
@@ -97,62 +82,6 @@ RSpec.describe MylistsController, :type => :controller do
         post :create, {:mylist => invalid_attributes}, valid_session
         expect(response).to render_template("new")
       end
-    end
-  end
-
-  describe "PUT update" do
-    describe "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
-
-      it "updates the requested mylist" do
-        mylist = Mylist.create! valid_attributes
-        put :update, {:id => mylist.to_param, :mylist => new_attributes}, valid_session
-        mylist.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "assigns the requested mylist as @mylist" do
-        mylist = Mylist.create! valid_attributes
-        put :update, {:id => mylist.to_param, :mylist => valid_attributes}, valid_session
-        expect(assigns(:mylist)).to eq(mylist)
-      end
-
-      it "redirects to the mylist" do
-        mylist = Mylist.create! valid_attributes
-        put :update, {:id => mylist.to_param, :mylist => valid_attributes}, valid_session
-        expect(response).to redirect_to(mylist)
-      end
-    end
-
-    describe "with invalid params" do
-      it "assigns the mylist as @mylist" do
-        mylist = Mylist.create! valid_attributes
-        put :update, {:id => mylist.to_param, :mylist => invalid_attributes}, valid_session
-        expect(assigns(:mylist)).to eq(mylist)
-      end
-
-      it "re-renders the 'edit' template" do
-        mylist = Mylist.create! valid_attributes
-        put :update, {:id => mylist.to_param, :mylist => invalid_attributes}, valid_session
-        expect(response).to render_template("edit")
-      end
-    end
-  end
-
-  describe "DELETE destroy" do
-    it "destroys the requested mylist" do
-      mylist = Mylist.create! valid_attributes
-      expect {
-        delete :destroy, {:id => mylist.to_param}, valid_session
-      }.to change(Mylist, :count).by(-1)
-    end
-
-    it "redirects to the mylists list" do
-      mylist = Mylist.create! valid_attributes
-      delete :destroy, {:id => mylist.to_param}, valid_session
-      expect(response).to redirect_to(mylists_url)
     end
   end
 

@@ -13,47 +13,15 @@ class MylistsController < ApplicationController
   def show
   end
 
-  # GET /mylists/new
-  def new
-    @mylist = Mylist.new
-  end
-
-  # GET /mylists/1/edit
-  def edit
-  end
-
   # POST /mylists
   # POST /mylists.json
   def create
     @mylist = Mylist.new(mylist_params)
 
-    respond_to do |format|
-      if @mylist.save
-        format.json { render :show, status: :created, location: @mylist }
-      else
-        format.json { render json: @mylist.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /mylists/1
-  # PATCH/PUT /mylists/1.json
-  def update
-    respond_to do |format|
-      if @mylist.update(mylist_params)
-        format.json { render :show, status: :ok, location: @mylist }
-      else
-        format.json { render json: @mylist.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /mylists/1
-  # DELETE /mylists/1.json
-  def destroy
-    @mylist.destroy
-    respond_to do |format|
-      format.json { head :no_content }
+    if @mylist.save
+      render json: @mylist
+    else
+      render json: @mylist.errors, status: :unprocessable_entity
     end
   end
 
