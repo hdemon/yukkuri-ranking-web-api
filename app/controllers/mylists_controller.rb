@@ -5,7 +5,7 @@ class MylistsController < ApplicationController
   # GET /mylists.json
   def index
     @mylists = Mylist.all
-    render @mylists
+    render json: @mylists
   end
 
   # GET /mylists/1
@@ -19,9 +19,9 @@ class MylistsController < ApplicationController
     @mylist = Mylist.new(mylist_params)
 
     if @mylist.save
-      render json: @mylist
+      render json: { status: "ok", mylist: mylist_params }
     else
-      render json: @mylist.errors, status: :unprocessable_entity
+      render json: { status: @mylist.errors, mylist: mylist_params }, status: :unprocessable_entity
     end
   end
 

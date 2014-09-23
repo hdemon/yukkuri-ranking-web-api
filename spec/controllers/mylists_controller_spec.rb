@@ -14,7 +14,15 @@ describe MylistsController do
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {
+      title: "地球防衛軍2（ゆっくり実況）",
+      mylist_id: "include strings",
+      description: "",
+      # 後で以下の要素をモデルに付け加える
+      # published_at: "Wed, 25 Jun 2014 02:33:33 +0900"
+      # build_latest_at: "Wed, 25 Jun 2014 02:33:33 +0900"
+      # creator: "☆大神☆（大神過激団:編集長）"
+    }
   }
 
   let(:valid_session) { {} }
@@ -49,8 +57,10 @@ describe MylistsController do
         expect(assigns(:mylist)).to be_persisted
       end
 
-      it "redirects to the created mylist" do
+      it "respond status and requested data as json" do
         post :create, {:mylist => valid_attributes}, valid_session
+
+        expect(response.body).to include "\"status\":\"ok\""
         expect(response.body).to include valid_attributes[:title]
         expect(response.body).to include valid_attributes[:mylist_id].to_s
       end
@@ -62,9 +72,12 @@ describe MylistsController do
         expect(assigns(:mylist)).to be_a_new(Mylist)
       end
 
-      it "re-renders the 'new' template" do
+      it "respond error status detail and requested data as json" do
         post :create, {:mylist => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
+
+        expect(response.body).not_to include "\"status\":\"ok\""
+        expect(response.body).to include invalid_attributes[:title]
+        expect(response.body).to include invalid_attributes[:mylist_id].to_s
       end
     end
   end
