@@ -1,5 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Mylist, :type => :model do
+describe Mylist do
+  # mylist = FactoryGirl.create(:mylist)
   pending "add some examples to (or delete) #{__FILE__}"
 end

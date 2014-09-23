@@ -23,6 +23,7 @@ module WebApi
     config.generators do |g|
       g.template_engine :erb
       g.test_framework  :rspec, fixture: true
+      g.factory_girl    dir: 'spec/factories'
       g.assets          false
       g.helper          false
       g.stylesheets     false
