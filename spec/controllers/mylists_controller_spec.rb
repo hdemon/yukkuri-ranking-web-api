@@ -1,18 +1,23 @@
 require 'rails_helper'
 
 describe MylistsController do
-  let!(:valid_attributes) { FactoryGirl.attributes_for(:mylist).to_json }
-  let!(:invalid_attributes) { FactoryGirl.attributes_for(:mylist, mylist_id: "contains string").to_json }
-
   let(:valid_session) { {} }
 
-  # describe "GET index" do
-  #   it "assigns all mylists as @mylists" do
-  #     mylist = Mylist.create! valid_attributes
-  #     get :index, {}, valid_session
-  #     expect(assigns(:mylists)).to eq([mylist])
-  #   end
-  # end
+  def valid_attributes
+    FactoryGirl.attributes_for(:mylist)
+  end
+
+  def invalid_attributes
+    FactoryGirl.attributes_for(:mylist, mylist_id: "contains string")
+  end
+
+  describe "GET index" do
+    it "responds mylists" do
+      mylist = Mylist.create! valid_attributes
+      get :index, {}, valid_session
+      expect(assigns(:mylists)).to eq([mylist])
+    end
+  end
 
   # describe "GET show" do
   #   it "assigns the requested mylist as @mylist" do
@@ -23,54 +28,58 @@ describe MylistsController do
   # end
 
   describe "POST create" do
-    describe "with valid params" do
-      it "creates a new Mylist" do
-        expect {
-          post :create, {:mylist => valid_attributes}, valid_session
-        }.to change(Mylist, :count).by(1)
+    context "when POST array of mylist data" do
+      describe "with all valid params" do
+        before do
+          @post = [valid_attributes, valid_attributes]
+          post :create, @post.to_json, valid_session
+        end
+
+        it "stores all posted params" do
+          expect(Mylist.count).to be 2
+          expect(Mylist.first.mylist_id).to be @post[0][:mylist_id]
+          expect(Mylist.second.mylist_id).to be @post[1][:mylist_id]
+        end
+
+        it "responds status ok" do
+          parsed = JSON.parse response.body
+          expect(parsed["status"]).to eql "ok"
+        end
       end
 
-      it "assigns a newly created mylist as @mylist" do
-        post :create, {:mylist => valid_attributes}, valid_session
+      describe "with params that contains invalid one" do
+        before do
+          @post = [valid_attributes, invalid_attributes]
+          post :create, {:mylists => @post.to_json}, valid_session
+        end
 
-        expect(assigns(:mylist)).to be_a(Mylist)
-        expect(assigns(:mylist)).to be_persisted
+        it "stores the only part of valid params" do
+          expect(Mylist.count).to be 1
+          expect(Mylist.first.mylist_id).to be @post[0][:mylist_id]
+        end
+
+        it "respond error status detail" do
+          parsed = JSON.parse response.body
+          expect(parsed["status"]).to eql "failed partially or all"
+        end
       end
 
-      it "respond status and requested data as json" do
-        post :create, {:mylist => valid_attributes}, valid_session
+      describe "with all invalid params" do
+        before do
+          @post = [invalid_attributes, invalid_attributes]
+          post :create, {:mylists => @post.to_json}, valid_session
+        end
 
-        expect(response.body).to include "\"status\":\"ok\""
-        expect(response.body).to include valid_attributes["title"]
-        expect(response.body).to include valid_attributes["mylist_id"].to_s
+        it "doesn't stores all posted params" do
+          expect(Mylist.count).to be 0
+        end
+
+        it "responds error status detail" do
+          parsed = JSON.parse response.body
+          expect(parsed["status"]).to eql "failed partially or all"
+        end
       end
     end
-
-    describe "with invalid params" do
-      it "assigns a newly created but unsaved mylist as @mylist" do
-        post :create, {:mylist => invalid_attributes}, valid_session
-        expect(assigns(:mylist)).to be_a_new(Mylist)
-      end
-
-      it "respond error status detail and requested data as json" do
-        post :create, {:mylist => invalid_attributes}, valid_session
-
-        expect(response.body).not_to include "\"status\":\"ok\""
-        expect(response.body).to include invalid_attributes["title"]
-        expect(response.body).to include invalid_attributes["mylist_id"].to_s
-      end
-    end
-
-    # context "when POST array of mylist data" do
-    #   describe "with valid params" do
-    #     it "assigns a newly created mylists as @mylists" do
-    #       post :create, {:mylist => valid_attributes}, valid_session
-
-    #       expect(assigns(:mylist)).to be_a(Mylist)
-    #       expect(assigns(:mylist)).to be_persisted
-    #     end
-    #   end
-    # end
   end
 
 end

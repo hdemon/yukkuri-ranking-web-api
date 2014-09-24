@@ -1,2 +1,3 @@
-json.status status
-json.requested json.extract! mylist, :id, :title, :mylist_id, :description, :created_at, :updated_at
+json.status @status
+json.message @message
+json.posted @posted.items, :id, :title, :mylist_id, :description

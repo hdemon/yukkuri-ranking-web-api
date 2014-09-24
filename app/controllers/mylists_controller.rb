@@ -1,37 +1,46 @@
 class MylistsController < ApplicationController
-  before_action :set_mylist, only: [:show, :edit, :update, :destroy]
+  protect_from_forgery except: :create
 
   # GET /mylists
   # GET /mylists.json
   def index
     @mylists = Mylist.all
-    render json: @mylists
+    @status = "ok"
+    @message = ""
+    render :json, template: "mylists/index.json.jbuilder"
   end
 
   # GET /mylists/1
   # GET /mylists/1.json
   def show
+    render :json, template: "mylists/show.json.jbuilder"
   end
 
   # POST /mylists
   # POST /mylists.json
   def create
-    @mylist = Mylist.new(mylist_params)
+    @posted = Mylists.new(mylists_params)
 
-    if @mylist.save
-      render json: { status: "ok", mylist: mylist_params }
+    if @posted.save
+      @status = "ok"
+      @message = ""
     else
-      render json: { status: @mylist.errors, mylist: mylist_params }, status: :unprocessable_entity
+      @status = "error"
+      @message = @posted.errors
     end
+
+    render :json, template: "mylists/create.json.jbuilder"
+  end
+
+  def latest
+    @mylist = Mylist.last(1).first
+    @status = "ok"
+    @message = ""
+    render :json, template: "mylists/show.json.jbuilder"
   end
 
   private
-    def set_mylist
-      @mylist = Mylist.find(params[:id])
-    end
-
-    def mylist_params
-      params.require("mylist")
-      json_params(params["mylist"]).permit(["title", "mylist_id", "description"])
+    def mylists_params
+      params.require("mylists").map {|item| item.permit(["title", "mylist_id", "description"]) }
     end
 end

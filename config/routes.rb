@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :series_mylists
+
+  get "/mylists/latest" => "mylists#latest"
   resources :mylists
 
   resources :users
