@@ -31,6 +31,7 @@ class MylistsController < ApplicationController
     end
 
     def mylist_params
-      params.require(:mylist).permit(:title, :mylist_id, :description)
+      params.require("mylist")
+      json_params(params["mylist"]).permit(["title", "mylist_id", "description"])
     end
 end

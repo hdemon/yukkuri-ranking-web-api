@@ -1,29 +1,8 @@
 require 'rails_helper'
 
 describe MylistsController do
-  let(:valid_attributes) {
-    {
-      title: "地球防衛軍2（ゆっくり実況）",
-      mylist_id: 44787551,
-      description: "",
-      # 後で以下の要素をモデルに付け加える
-      # published_at: "Wed, 25 Jun 2014 02:33:33 +0900"
-      # build_latest_at: "Wed, 25 Jun 2014 02:33:33 +0900"
-      # creator: "☆大神☆（大神過激団:編集長）"
-    }
-  }
-
-  let(:invalid_attributes) {
-    {
-      title: "地球防衛軍2（ゆっくり実況）",
-      mylist_id: "include strings",
-      description: "",
-      # 後で以下の要素をモデルに付け加える
-      # published_at: "Wed, 25 Jun 2014 02:33:33 +0900"
-      # build_latest_at: "Wed, 25 Jun 2014 02:33:33 +0900"
-      # creator: "☆大神☆（大神過激団:編集長）"
-    }
-  }
+  let!(:valid_attributes) { FactoryGirl.attributes_for(:mylist).to_json }
+  let!(:invalid_attributes) { FactoryGirl.attributes_for(:mylist, mylist_id: "contains string").to_json }
 
   let(:valid_session) { {} }
 
@@ -53,6 +32,7 @@ describe MylistsController do
 
       it "assigns a newly created mylist as @mylist" do
         post :create, {:mylist => valid_attributes}, valid_session
+
         expect(assigns(:mylist)).to be_a(Mylist)
         expect(assigns(:mylist)).to be_persisted
       end
@@ -61,8 +41,8 @@ describe MylistsController do
         post :create, {:mylist => valid_attributes}, valid_session
 
         expect(response.body).to include "\"status\":\"ok\""
-        expect(response.body).to include valid_attributes[:title]
-        expect(response.body).to include valid_attributes[:mylist_id].to_s
+        expect(response.body).to include valid_attributes["title"]
+        expect(response.body).to include valid_attributes["mylist_id"].to_s
       end
     end
 
@@ -76,10 +56,21 @@ describe MylistsController do
         post :create, {:mylist => invalid_attributes}, valid_session
 
         expect(response.body).not_to include "\"status\":\"ok\""
-        expect(response.body).to include invalid_attributes[:title]
-        expect(response.body).to include invalid_attributes[:mylist_id].to_s
+        expect(response.body).to include invalid_attributes["title"]
+        expect(response.body).to include invalid_attributes["mylist_id"].to_s
       end
     end
+
+    # context "when POST array of mylist data" do
+    #   describe "with valid params" do
+    #     it "assigns a newly created mylists as @mylists" do
+    #       post :create, {:mylist => valid_attributes}, valid_session
+
+    #       expect(assigns(:mylist)).to be_a(Mylist)
+    #       expect(assigns(:mylist)).to be_persisted
+    #     end
+    #   end
+    # end
   end
 
 end
