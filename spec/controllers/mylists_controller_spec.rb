@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe MylistsController do
-  let(:valid_session) { {} }
+  let(:valid_session) { {"ACCEPT" => "application/json", "CONTENT_TYPE" => "application/json"} }
 
   def valid_attributes
     FactoryGirl.attributes_for(:mylist)
@@ -32,7 +32,7 @@ describe MylistsController do
       describe "with all valid params" do
         before do
           @post = [valid_attributes, valid_attributes]
-          post :create, @post.to_json, valid_session
+          post :create, {:mylists => @post}.to_json, {}
         end
 
         it "stores all posted params" do
@@ -42,6 +42,7 @@ describe MylistsController do
         end
 
         it "responds status ok" do
+          pp response.body
           parsed = JSON.parse response.body
           expect(parsed["status"]).to eql "ok"
         end

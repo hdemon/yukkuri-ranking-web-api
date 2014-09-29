@@ -14,6 +14,7 @@ class Mylists
 
   def save
     result = @items.map do |mylist|
+      pp mylist
       if mylist.save
         true
       else
